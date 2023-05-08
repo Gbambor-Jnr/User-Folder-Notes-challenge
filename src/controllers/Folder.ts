@@ -8,7 +8,7 @@ import { Folder, User } from "../models";
 import { userInfo } from "os";
 
 export const createFolder = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {

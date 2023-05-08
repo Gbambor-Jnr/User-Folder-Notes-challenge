@@ -3,14 +3,6 @@ import { SavedUser } from "../dtos/user.dto";
 import { validateToken } from "../utility";
 import { AuthPayload } from "../dtos/payload.dto";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AuthPayload;
-    }
-  }
-}
-
 export const Authenticate = async (
   req: Request,
   res: Response,

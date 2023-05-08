@@ -30,7 +30,7 @@ export const generateToken = async (payload: AuthPayload) => {
   return token;
 };
 
-export const validateToken = async (req: Request) => {
+export const validateToken = async (req: any) => {
   const token = req.get("Authorization");
 
   if (token) {

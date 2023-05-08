@@ -6,7 +6,7 @@ import { HttpError } from "../utility/Error";
 import { Folder, Notes, User } from "../models";
 
 export const createNotes = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
@@ -38,102 +38,107 @@ export const createNotes = async (
   }
 };
 
-// export const getAllNotes = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const errors = validationResult(req.body);
-//     if (!errors.isEmpty()) {
-//       const error = new HttpError("Invalid inputs", 422);
-//       throw error;
-//     }
+export const getAllNotesInFolder = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // const errors = validationResult(req.body);
+    // if (!errors.isEmpty()) {
+    //   const error = new HttpError("Invalid inputs", 422);
+    //   throw error;
+    // }
+    const user = req.user;
+    const existingUser = await user.findOne({ where: { id: user.id } });
+    const folderId = req.params.id;
+    if (existingUser) {
+      const folders = await Notes.findAll({ where: { folderId: folderId } });
+      res.status(200).json({ folders: folders });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-//     const { noteName, notesData } = req.body;
+export const getSingleNoteById = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const errors = validationResult(req.body);
+    if (!errors.isEmpty()) {
+      const error = new HttpError("Invalid inputs", 422);
+      throw error;
+    }
 
-//     const createdNote = await Notes.create({
-//       notesData,
-//       noteName,
-//     });
-//     res.status(201).json({ message: "Notes created succcesfully" });
-//     //Later its going to be folder.createNote()
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+    const { folderId, notesId } = req.params;
 
-// export const getNoteById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const errors = validationResult(req.body);
-//     if (!errors.isEmpty()) {
-//       const error = new HttpError("Invalid inputs", 422);
-//       throw error;
-//     }
+    const user = req.user;
+    const existingUser = await User.findOne({ where: { id: user.id } });
 
-//     const { noteName, notesData } = req.body;
+    if (existingUser) {
+      const searchedFolder = await Notes.findAll({
+        where: { id: notesId, folderId: folderId },
+      });
+      res.status(200).json({ note: searchedFolder });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-//     const createdNote = await Notes.create({
-//       notesData,
-//       noteName,
-//     });
-//     res.status(201).json({ message: "Notes created succcesfully" });
-//     //Later its going to be folder.createNote()
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+export const updateNotes = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const errors = validationResult(req.body);
+    if (!errors.isEmpty()) {
+      const error = new HttpError("Invalid inputs", 422);
+      throw error;
+    }
+    const { folderId, notesId } = req.params;
 
-// export const updateNote = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const errors = validationResult(req.body);
-//     if (!errors.isEmpty()) {
-//       const error = new HttpError("Invalid inputs", 422);
-//       throw error;
-//     }
+    const { noteName, notesData } = req.body;
 
-//     const { noteName, notesData } = req.body;
+    const noteToBeUpdated = await Notes.findOne({
+      where: { id: notesId, folderId: folderId },
+    });
+    if (noteToBeUpdated) {
+      noteToBeUpdated.noteName = noteName;
+      noteToBeUpdated.notesData = notesData;
+    }
+    res.status(201).json({ message: "Notes updated succcesfully" });
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-//     const createdNote = await Notes.create({
-//       notesData,
-//       noteName,
-//     });
-//     res.status(201).json({ message: "Notes created succcesfully" });
-//     //Later its going to be folder.createNote()
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+export const deleteNoteById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const errors = validationResult(req.body);
+    if (!errors.isEmpty()) {
+      const error = new HttpError("Invalid inputs", 422);
+      throw error;
+    }
 
-// export const deleteNoteById = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const errors = validationResult(req.body);
-//     if (!errors.isEmpty()) {
-//       const error = new HttpError("Invalid inputs", 422);
-//       throw error;
-//     }
+    const { folderId, notesId } = req.params;
 
-//     const { noteName, notesData } = req.body;
+    const { noteName, notesData } = req.body;
 
-//     const createdNote = await Notes.create({
-//       notesData,
-//       noteName,
-//     });
-//     res.status(201).json({ message: "Notes created succcesfully" });
-//     //Later its going to be folder.createNote()
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+    const noteToBeDeleted = await Notes.destroy({
+      where: { id: notesId, folderId: folderId },
+    });
+    res.status(201).json({ message: "Notes deleted succcesfully" });
+    //Later its going to be folder.createNote()
+  } catch (err) {
+    console.log(err);
+  }
+};

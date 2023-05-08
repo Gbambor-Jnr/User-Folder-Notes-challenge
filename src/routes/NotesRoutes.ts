@@ -3,6 +3,9 @@ import Sequelize from "sequelize";
 import express, { Router } from "express";
 import {
   createNotes,
+  deleteNoteById,
+  getAllNotesInFolder,
+  getSingleNoteById,
   //   deleteNoteById,
   //   getAllNotes,
   //   getNoteById,
@@ -12,6 +15,10 @@ import {
 const router = Router();
 
 router.post("/folder/:id/notes", createNotes);
+router.get("/folder/:id/notes", getAllNotesInFolder);
+router.get("/folder/:id/notes/:id", getSingleNoteById);
+router.patch("/folder/:id/notes/:id", getSingleNoteById);
+router.patch("/folder/:id/notes/:id", deleteNoteById);
 // router.get("/folder/:id/notes", getAllNotes); //get all notes in this folder
 // router.get("/folder/:folderid/notes/:noteid", getNoteById); //get a single note in this folder by its id
 
