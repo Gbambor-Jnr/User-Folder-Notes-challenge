@@ -39,4 +39,4 @@ export const User = sequelize.define<UserDoc>("user", {
   },
 });
 
-// User.sync({ alter: true });
+//User.sync({ alter: true });

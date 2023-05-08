@@ -31,14 +31,14 @@ const startServer = async () => {
   Notes.belongsTo(Folder);
 
   const userFoldersync = async () => {
-    // await Folder.sync({ alter: true });
-    // // await User.sync({ alter: true });
-    // await Notes.sync({ alter: true });
+    await Folder.sync({ alter: true });
+    //await User.sync({ alter: true });
+    await Notes.sync({ alter: true });
   };
 
   userFoldersync();
 
-  app.listen(4005, () => {
+  app.listen(4007, () => {
     console.log("challenge is connected");
   });
 };

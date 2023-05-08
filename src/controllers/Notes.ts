@@ -50,7 +50,7 @@ export const getAllNotesInFolder = async (
     //   throw error;
     // }
     const user = req.user;
-    const existingUser = await user.findOne({ where: { id: user.id } });
+    const existingUser = await User.findOne({ where: { id: user.id } });
     const folderId = req.params.id;
     if (existingUser) {
       const folders = await Notes.findAll({ where: { folderId: folderId } });
@@ -74,6 +74,7 @@ export const getSingleNoteById = async (
     }
 
     const { folderId, notesId } = req.params;
+    console.log(folderId, notesId);
 
     const user = req.user;
     const existingUser = await User.findOne({ where: { id: user.id } });
